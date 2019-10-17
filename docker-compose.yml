@@ -1,0 +1,55 @@
+---
+version: "3.2"
+
+volumes:
+  db:
+
+networks:
+  memologe:
+  host:
+
+services:
+  # adminer:
+  #   image: adminer
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - memologe
+  #   restart: unless-stopped
+
+  db:
+    image: mariadb
+    #volumes:
+    #  - db:/var/lib/mysql
+    networks:
+      - memologe
+    environment:
+      MYSQL_DATABASE: "memes"
+      MYSQL_PASSWORD: "Memesaregreat"
+      MYSQL_USER: "memeapi"
+      MYSQL_ROOT_PASSWORD: "test1"
+    #healthcheck:
+   #   test: ["CMD", "mysqladmin", "ping", "--silent"]
+    restart: unless-stopped
+
+  memeapi:
+    image: einspaten/memeapi
+    build: .
+    ports:
+      - 127.0.0.1:8080:8080
+    depends_on:
+      - db
+    volumes:
+      - $PWD/data/:/app/data/
+    networks:
+      - memologe
+      - host
+    environment:
+      appHost: "0.0.0.0"
+      appPort: "8080"
+      dbHost: "db"
+      dbPort: "3306"
+      dbUser: "memeapi"
+      dbPassword: "Memesaregreat"
+      dbDB: "memes"
+    restart: unless-stopped

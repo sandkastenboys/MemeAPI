@@ -4,12 +4,12 @@ LABEL maintainer="SpartanerSpaten <revol-xut@protonmail.com"
 
 WORKDIR /app
 
-#COPY go.mod go.sum ./
+RUN apt-get install git
 
-#Downloads Dependecy
-RUN go mod download
+RUN go get -u github.com/go-sql-driver/mysql
 
 COPY . .
+COPY ./app /app
 
 RUN go build -o main .
 

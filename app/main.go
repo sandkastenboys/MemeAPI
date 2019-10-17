@@ -1,5 +1,12 @@
 package main
 
+import "fmt"
+
 func main() {
-	$END$
+	fmt.Println("============ Starting Meme API ============");
+
+	loadConfig()
+	setupMysql()
+	apiSetup()
+
 }
